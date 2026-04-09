@@ -13,4 +13,5 @@ jobs:
         with:
           persist-credentials: false
       - name: Build
+        id: build
         run: ./mwaa-local-env build-image

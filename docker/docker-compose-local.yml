@@ -21,13 +21,22 @@ services:
     environment:
       - LOAD_EX=n
       - EXECUTOR=Local
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
     logging:
       options:
         max-size: 10m
         max-file: "3"
     volumes:
-      - "${PWD}/dags:/usr/local/airflow/dags"
-      - "${PWD}/plugins:/usr/local/airflow/plugins"
+      # Analytical Platform
+      - "${HOME}/.kube/config:/usr/local/airflow/dags/.kube/config"
+      - "${PWD}/../dist/dags:/usr/local/airflow/dags"
+      - "${PWD}/../airflow/.airflowignore:/usr/local/airflow/dags/.airflowignore"
+      - "${PWD}/../airflow/dag_factory.py:/usr/local/airflow/dags/dag_factory.py"
+      - "${PWD}/../airflow/analytical_platform:/usr/local/airflow/dags/analytical_platform"
+      # MWAA Local Runner
       - "${PWD}/requirements:/usr/local/airflow/requirements"
       - "${PWD}/startup_script:/usr/local/airflow/startup"
     ports:
